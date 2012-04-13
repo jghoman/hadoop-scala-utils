@@ -1,0 +1,25 @@
+Simple Scala script with useful predefines for working interactively with Hadoop.  Scala makes a good scripting language for interacting with Hadoop compared to via the command line as the full power of Scala is available and each command does not have to be executed in a separate JVM, significantly speeding up the throughput.
+
+Assuming Scala is your classpath, to use the utils (in Hadoop 1.0 or above, basically any version supporting automatically getting the Hadoop classpath):
+
+scala -cp `hadoop classpath`  -i hadooputils.scala
+
+This will drop you into the scala shell with the hadoop utilities defined.  To quickly find files named "part-00013.avro", while ignoring _logs and .setup, for example, you could:
+
+def findpart13(path: Path): Unit = {
+  try {
+    for(status <- defaultFs.listStatus(path)) {
+      val name = status.getPath.getName
+      if(!(name.equals("_logs") || name.equals(".setup"))) {
+        if(status.isDir) findtext(status.getPath)
+        if(name.equals("part-00013.avro")) println("Found " + status.getPath)
+      }
+    }
+  } catch {
+    case ioe:IOException => println("ioe: " + ioe + " at " + path)
+  }
+}
+
+findpart13("/data/avro/")
+
+
