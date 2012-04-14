@@ -11,7 +11,7 @@ def findpart13(path: Path): Unit = {
     for(status <- defaultFs.listStatus(path)) {
       val name = status.getPath.getName
       if(!(name.equals("_logs") || name.equals(".setup"))) {
-        if(status.isDir) findtext(status.getPath)
+        if(status.isDir) findpart13(status.getPath)
         if(name.equals("part-00013.avro")) println("Found " + status.getPath)
       }
     }
